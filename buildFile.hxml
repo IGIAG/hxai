@@ -1,0 +1,8 @@
+--class-path ./src
+--dce full
+#--neko ./nekobin.n
+
+--main Main
+
+#--cmd neko ./nekobin.n
+--interp
