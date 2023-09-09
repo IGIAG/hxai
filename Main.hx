@@ -19,11 +19,18 @@ class Main {
 
         trace("To load a model press 'l' and then enter. To train new network press enter!");
         if(Sys.stdin().readLine() == "l"){
-            primary = Json.parse(File.getContent("./model.json"));
+            var parser = new json2object.JsonParser<Network>(); // Creating a parser for Cls class
+            trace("enter the model file path:");
+            var path:String = Sys.stdin().readLine();
+
+            parser.fromJson(File.getContent(path), "./error.txt"); // Parsing a string. A filename is specified for errors management
+            var data:Network = parser.value;
+
+            primary = data;
             train = false;
         }
 
-        //primary.Save();
+        primary.Save();
 
         //var training_inputs:Array<Float> = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,];
         var training_inputs:Array<Float> = [for (i in 1...5000) i];

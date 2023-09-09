@@ -25,7 +25,9 @@ class Network {
     }
 
     public function Save(){
-        sys.io.File.saveContent('./model${Math.floor(Math.random() * 1000000)}.json',Json.stringify(this));
+        //sys.io.File.saveContent('./model${Math.floor(Math.random() * 1000000)}.json',Json.stringify(this));
+        var writer = new json2object.JsonWriter<Network>();
+        sys.io.File.saveContent('./model${Math.floor(Math.random() * 1000000)}.json',writer.write(this));
     }
     
     public function Run(inputs:Array<Float>):Array<Float>{

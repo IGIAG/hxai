@@ -8,6 +8,8 @@ enum LayerType {
 }
 
 
+
+
 class Layer {
     public var nodes:Array<Node> = [];
 

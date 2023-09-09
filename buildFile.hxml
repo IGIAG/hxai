@@ -1,5 +1,7 @@
 --class-path ./src
 --dce full
+
+--library json2object
 #--neko ./nekobin.n
 
 --main Main

@@ -52,7 +52,7 @@
                 }
             ],
             "inputCount": 1,
-            "type": 2
+            "type": "SIGMOID"
         },
         {
             "nodes": [
@@ -162,7 +162,7 @@
                 }
             ],
             "inputCount": 8,
-            "type": 2
+            "type": "SIGMOID"
         },
         {
             "nodes": [
@@ -272,7 +272,7 @@
                 }
             ],
             "inputCount": 8,
-            "type": 2
+            "type": "SIGMOID"
         },
         {
             "nodes": [
@@ -382,7 +382,7 @@
                 }
             ],
             "inputCount": 8,
-            "type": 2
+            "type": "SIGMOID"
         },
         {
             "nodes": [
@@ -401,7 +401,7 @@
                 }
             ],
             "inputCount": 8,
-            "type": 1
+            "type": "RELU"
         }
     ]
 }
