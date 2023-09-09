@@ -1,22 +1,33 @@
-import eval.luv.Random;
+
+import sys.io.File;
 import haxe.crypto.Md5;
-import eval.luv.Dir;
 import haxe.Json;
 
 class Main {
     public static function main(){
+        
+
+
         var primary:Network = new Network();
         primary.addLayer(new Layer(8,1,SIGMOID));
-        primary.addLayer(new Layer(16,8,SIGMOID));
-        primary.addLayer(new Layer(8,16,RELU));
-        primary.addLayer(new Layer(8,8,RELU));
-        primary.addLayer(new Layer(1,8,SIGMOID));
+        primary.addLayer(new Layer(8,8,SIGMOID));
+        primary.addLayer(new Layer(8,8,SIGMOID));
+        primary.addLayer(new Layer(8,8,SIGMOID));
+        primary.addLayer(new Layer(1,8,RELU));
 
-        primary.Save();
+        var train = true;
+
+        trace("To load a model press 'l' and then enter. To train new network press enter!");
+        if(Sys.stdin().readLine() == "l"){
+            primary = Json.parse(File.getContent("./model.json"));
+            train = false;
+        }
+
+        //primary.Save();
 
         //var training_inputs:Array<Float> = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,];
-        var training_inputs:Array<Float> = [for (i in 10...100) i];
-        var training_outputs:Array<Array<Float>> = [for(i in 10...100) GenTrainingLabels(i)];
+        var training_inputs:Array<Float> = [for (i in 1...5000) i];
+        var training_outputs:Array<Array<Float>> = [for(i in 1...5000) GenTrainingLabels(i)];
         //var training_outputs:Array<Array<Float>> = [[0,10],[10,0],[0,10],[10,0],[0,10],[10,0],[0,10],[10,0],[0,10],[10,0],[0,10],[10,0],[0,10],[10,0],[0,10],[10,0]];
 
         if(training_inputs.length != training_outputs.length){
@@ -24,26 +35,21 @@ class Main {
             trace(training_outputs.length);
         }
 
-        var epochsLeft = 10000;
+        var epochsLeft = 20000;
         var improvmentsFound:Int = 0;
 
-        while(epochsLeft > 0){
+        while(epochsLeft > 0 && train){
             epochsLeft--;
             
             var contender:Network = primary.Clone();
-
-            if(epochsLeft % 100 == 0){
-                contender.Mutate(64);
-            }
-            else if(epochsLeft % 6 == 0){
-                contender.Mutate(24);
-            }
-            else if((epochsLeft + 1) % 6 == 0){
+            if(epochsLeft % 10 == 0){
                 contender.Mutate(8);
             }
             else {
-                contender.Mutate(3);
+                contender.Mutate(2);
             }
+            
+
             var i = 0;
 
             var deltaTotalPrimary:Float = 1;
@@ -89,7 +95,10 @@ class Main {
         //trace(Md5.encode(Json.stringify(primary)));
         //primary.Mutate(3);
         trace(Md5.encode(Json.stringify(primary)));
-        primary.Save();
+        if(train){
+            primary.Save();
+        }
+        
         trace('TRAINING DONE! Found $improvmentsFound better configs! INFERENCE MODE!');
         while(true){
 

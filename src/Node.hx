@@ -35,8 +35,8 @@ class Node {
     }
 
     public function Mutate(){
-        weights[Math.floor(Math.random() * weights.length)] += ((Math.random()-0.5) * 4);
-        weights[Math.floor(Math.random() * weights.length)] *= ((Math.random()-0.5) * 4);
+        //weights[Math.floor(Math.random() * weights.length)] += ((Math.random()-0.5) * 4);
+        weights[Math.floor(Math.random() * weights.length)] *= ((Math.random()-0.5) * 6);
 
     }
 
