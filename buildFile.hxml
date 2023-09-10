@@ -2,6 +2,9 @@
 --dce full
 
 --library json2object
+
+--library thx.csv
+
 #--neko ./nekobin.n
 
 --main Main
