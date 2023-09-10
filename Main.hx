@@ -1,4 +1,5 @@
 
+import sys.thread.Lock;
 import sys.io.File;
 import haxe.crypto.Md5;
 import haxe.Json;
@@ -11,7 +12,7 @@ class Main {
         var primary:Network = new Network();
         primary.addLayer(new Layer(8,1,SIGMOID));
         primary.addLayer(new Layer(8,8,SIGMOID));
-        primary.addLayer(new Layer(8,8,SIGMOID));
+        primary.addLayer(new Layer(8,8,RELU));
         primary.addLayer(new Layer(8,8,SIGMOID));
         primary.addLayer(new Layer(1,8,RELU));
 
@@ -21,7 +22,7 @@ class Main {
         if(Sys.stdin().readLine() == "l"){
             var parser = new json2object.JsonParser<Network>(); // Creating a parser for Cls class
             trace("enter the model file path:");
-            var path:String = Sys.stdin().readLine();
+            var path:String = Sys.stdin().readLine(); 
 
             parser.fromJson(File.getContent(path), "./error.txt"); // Parsing a string. A filename is specified for errors management
             var data:Network = parser.value;
@@ -30,7 +31,7 @@ class Main {
             train = false;
         }
 
-        primary.Save();
+        //primary.Save();
 
         //var training_inputs:Array<Float> = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,];
         var training_inputs:Array<Float> = [for (i in 1...5000) i];
@@ -42,10 +43,11 @@ class Main {
             trace(training_outputs.length);
         }
 
-        var epochsLeft = 20000;
+        var epochsLeft = 5000;
         var improvmentsFound:Int = 0;
 
         while(epochsLeft > 0 && train){
+            var startTime: Float = Sys.time();
             epochsLeft--;
             
             var contender:Network = primary.Clone();
@@ -64,6 +66,7 @@ class Main {
             var deltaTotalContender:Float = 1;
 
             while(i < training_inputs.length){
+
                 var predictionPrimary = primary.Run([training_inputs[i]]);
                 var predictionContender = contender.Run([training_inputs[i]]);
 
@@ -74,10 +77,16 @@ class Main {
                 deltaTotalPrimary += deltaPrimary;
                 deltaTotalContender += deltaContender;
                 i++;
-            
+                Sys.stdout().flush();
+
             }
 
+
+            
             var avgDelta:Float = 0;
+
+            var endTime: Float = Sys.time();
+
 
             if(deltaTotalContender < deltaTotalPrimary){
                 trace(Md5.encode(Json.stringify(primary)));
@@ -87,7 +96,8 @@ class Main {
                 avgDelta = deltaTotalContender/training_inputs.length;
                 var avgDeltaOld = deltaTotalPrimary/training_inputs.length;
                 Sys.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                trace('NEW RECORD DELTA $avgDelta! Old: $avgDeltaOld Epochs left: $epochsLeft');
+                var elapsedTime: Float = endTime - startTime;
+                trace('NEW RECORD DELTA $avgDelta! Old: $avgDeltaOld Epochs left: $epochsLeft, Epoch took $elapsedTime ms.');
                 improvmentsFound += 1;
             } else {
                 Sys.print(".");
@@ -107,12 +117,17 @@ class Main {
         }
         
         trace('TRAINING DONE! Found $improvmentsFound better configs! INFERENCE MODE!');
+        //trace(primary.Run([ 36 ]));
         while(true){
+            var input:String = Sys.stdin().readLine();
+            var startTime: Float = Sys.time();
+            var o = primary.Run([ Std.parseFloat(input)]);
 
-            var o = primary.Run([ Std.parseFloat(Sys.stdin().readLine())]);
+            var endTime:Float = Sys.time(); // Get the current time again
 
+            var elapsedTime:Float = endTime - startTime; // Calculate the elapsed time in milliseconds
 
-            trace(o[0]);
+            trace(o[0] + ' $elapsedTime ms');
         }
 
        
