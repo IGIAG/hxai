@@ -24,10 +24,14 @@ class Network {
         }
     }
 
-    public function Save(){
+    public function Save(id:Int){
         //sys.io.File.saveContent('./model${Math.floor(Math.random() * 1000000)}.json',Json.stringify(this));
         var writer = new json2object.JsonWriter<Network>();
-        sys.io.File.saveContent('./model${Math.floor(Math.random() * 1000000)}.json',writer.write(this));
+        if(id == -1){
+            sys.io.File.saveContent('./models/complete.json',writer.write(this));
+            return;
+        }
+        sys.io.File.saveContent('./models/${id}.json',writer.write(this));
     }
     
     public function Run(inputs:Array<Float>):Array<Float>{

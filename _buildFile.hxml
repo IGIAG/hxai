@@ -5,9 +5,11 @@
 
 --library thx.csv
 
---neko ./nekobin.n
+#--neko ./nekobin.n
+--hl ./hashlink.bin
 
 --main Main
 
---cmd neko ./nekobin.n
+#--cmd neko ./nekobin.n
+--cmd hl ./hashlink.bin
 #--interp

@@ -16,6 +16,7 @@ class Node {
     }
 
     public function RunSigmoid(inputs:Array<Float>){
+
         value = Sigmoid(WeightSum(inputs));
         return value;
     }
@@ -24,6 +25,7 @@ class Node {
     }
 
     private function WeightSum(inputs:Array<Float>){
+        
         var sum:Float = 0;
         var i = 0;
         while (i < inputs.length){
